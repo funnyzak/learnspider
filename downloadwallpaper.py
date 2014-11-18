@@ -31,8 +31,8 @@ if __name__ == '__main__':
 	downbing.start()
 	print "we have download the image"
 		
-#rlpage = "http://cn.bing.com"
-#ndexpage = urllib2.urlopen(urlpage)
+#urlpage = "http://cn.bing.com"
+#indexpage = urllib2.urlopen(urlpage)
 #pagecontent =  indexpage.read()
 #rule = "http\S*\.jpg"
 #pattern = re.compile(rule)
