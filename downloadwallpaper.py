@@ -5,7 +5,7 @@ import re
 import urllib
 import os
 import logging
-
+import time
 ___author___ = "fangwei"
 
 class downBing(object):
@@ -21,7 +21,8 @@ class downBing(object):
 		pageContent = urlhandler.read()
 		pattern= self.rule.search(pageContent)
 		imageurl = pattern.group()
-		urllib.urlretrieve(imageurl,'bing.jpg')
+		print imageurl
+		urllib.urlretrieve(imageurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+".jpg"))
 
 if __name__ == '__main__':
 
