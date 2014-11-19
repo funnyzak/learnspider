@@ -17,9 +17,9 @@ class downBing(object):
 	def __init__(self,urlpath,filepath):
 		self.urlpath = urlpath
 		self.filepath = filepath
-		self.rulepng = re.compile("http\S*\.png")
-		self.rulejpg = re.compile("http\S*\.jpg")
-		self.rulegif = re.compile("http\S*\.png")
+		self.rulepng = re.compile("(http://[^\{\;\,\<]*\.png)\w*?")
+		self.rulejpg = re.compile("(http://[^\{\;\,\<]*\.jpg)\w*?")
+		self.rulegif = re.compile("(http://[^\{\;\,\<]*\.gif)\w*?")
 		self.count = 1
 	def start(self)	:
 		urlhandler = urllib2.urlopen(self.urlpath)
@@ -46,7 +46,7 @@ class downBing(object):
 			for imageurl in pattern:
 				print imageurl
 				self.count = self.count+1
-				urllib.urlretrieve(imageurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+"git"))
+				urllib.urlretrieve(imageurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+"gif"))
 
 if __name__ == '__main__':
 	len = len(sys.argv)
