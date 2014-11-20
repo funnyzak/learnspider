@@ -46,7 +46,7 @@ class downBing(object):
 			for imageurl in pattern:
 				print imageurl
 				self.count = self.count+1
-				urllib.urlretrieve(imageurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+"gif"))
+				urllib.urlretrieve(imageurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".gif"))
 
 if __name__ == '__main__':
 	len = len(sys.argv)
