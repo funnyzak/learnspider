@@ -24,6 +24,7 @@ class downBing(object):
 	def start(self)	:
 		urlhandler = urllib2.urlopen(self.urlpath)
 		pageContent = urlhandler.read()
+		pageContent = pageContent.replace(r"\/","/")
 		pattern= self.rulepng.findall(pageContent)
 		print pattern.__len__()
 		length = pattern.__len__()
