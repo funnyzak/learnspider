@@ -1,7 +1,7 @@
 #-*-coding:utf-8 -*-
 
 ___author___ = "fangwei"
-
+import random
 import urllib2
 import re
 import urllib
@@ -28,6 +28,7 @@ class DownloadDouBan(object):
 		self.headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 	        cookie = cookielib.CookieJar()
                 self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
+		self.downcount = 0
 	def getnextandimgurl(self,path):	
 		request = urllib2.Request(path)
 		request.add_header('User-Agent',self.headers['User-Agent'])
@@ -51,7 +52,9 @@ class DownloadDouBan(object):
 			 time.sleep(0.5)
 			 urllib.urlretrieve(self.downurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
 			 self.getnextandimgurl(self.nexturl) #self.count = self.count+1
-
+			 self.downcount = self.downcount+1
+			 if self.downcount > 20:
+				time.sleep(random.uniform(2,6))
 
 if __name__ == '__main__':
 	len = len(sys.argv)
