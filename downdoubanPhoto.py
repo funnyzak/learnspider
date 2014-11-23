@@ -25,10 +25,13 @@ class DownloadDouBan(object):
 		self.count = 0
 		self.downurl = ''
 		self.nexturl = ''
+		self.headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 	        cookie = cookielib.CookieJar()
                 self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
 	def getnextandimgurl(self,path):	
-		response = self.opener.open(path)
+		request = urllib2.Request(path)
+		request.add_header('User-Agent',self.headers['User-Agent'])
+		response = self.opener.open(request)
 		pageContent = response.read()
 		countresult = self.countrule.search(pageContent)
 		self.count = countresult.group(1)
@@ -45,6 +48,7 @@ class DownloadDouBan(object):
 		self.getnextandimgurl(self.url)	
 		while self.count != self.allcount:
 			 print self.downurl
+			 time.sleep(0.5)
 			 urllib.urlretrieve(self.downurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
 			 self.getnextandimgurl(self.nexturl) #self.count = self.count+1
 
