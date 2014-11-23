@@ -32,11 +32,12 @@ class DownloadDouBan(object):
 	def getnextandimgurl(self,path):	
 		request = urllib2.Request(path)
 		request.add_header('User-Agent',self.headers['User-Agent'])
+		request.add_header('Connection','keep-alive')
 		response = self.opener.open(request)
 		pageContent = response.read()
 		countresult = self.countrule.search(pageContent)
-		self.count = countresult.group(1)
-		self.allcount = countresult.group(2)
+		self.count = int(countresult.group(1))
+		self.allcount =int(countresult.group(2))
 		soup = BeautifulSoup(pageContent)
 		searchnextref = soup.select("#next_photo")
 		nexturltmp = self.nextrule.search(str(searchnextref))
@@ -46,15 +47,16 @@ class DownloadDouBan(object):
 		self.downurl = downurltmp.group(1)
 		self.opener.close()
 	def start(self):
-		self.getnextandimgurl(self.url)	
-		while self.count != self.allcount:
+		self.getnextandimgurl(self.url)
+		while self.count<=self.allcount:
 			 print self.downurl
-			 time.sleep(0.5)
 			 urllib.urlretrieve(self.downurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
-			 self.getnextandimgurl(self.nexturl) #self.count = self.count+1
+			 self.getnextandimgurl(self.nexturl)
+			 print "%s/%s" %(self.count,self.allcount)
 			 self.downcount = self.downcount+1
-			 if self.downcount > 20:
-				time.sleep(random.uniform(2,6))
+			 if self.downcount == int(self.allcount):
+				break
+			 time.sleep(random.uniform(1,2.7))
 
 if __name__ == '__main__':
 	len = len(sys.argv)
