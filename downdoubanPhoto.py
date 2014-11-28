@@ -13,9 +13,10 @@ import sys
 import cookielib
 from bs4 import BeautifulSoup
 
-def multiThreadDown(url,count):
+def multiThreadDown(url,count,allcount):
 	if url.__len__()> 2 :
 		urllib.urlretrieve(url,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
+		print '%s/%s'%(count+1,allcount)
 		print url
 
 class DownloadDouBan(object):
@@ -57,7 +58,7 @@ class DownloadDouBan(object):
 	def multiThreadstart(self):
 		self.getnextandimgurl(self.url)
 		for i in  range(self.allcount):
-			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i))
+			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i,self.allcount))
 			t1.start()
 			self.getnextandimgurl(self.nexturl)
 	def genThread(self):
