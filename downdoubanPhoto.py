@@ -14,7 +14,7 @@ import cookielib
 from bs4 import BeautifulSoup
 
 def multiThreadDown(url,count,allcount,path):
-	time.sleep(random.uniform(1,4.5))
+	time.sleep(random.uniform(1,1.7)+ random.uniform(0.5,1.2))
 	if url.__len__()> 2 :
 		urllib.urlretrieve(url,path+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
 		print '%s/%s'%(count+1,allcount)
@@ -41,32 +41,36 @@ class DownloadDouBan(object):
 	        cookie = cookielib.CookieJar()
                 self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
 		self.downcount = 0
-	def getnextandimgurl(self,path):	
-		request = urllib2.Request(path)
-		request.add_header('User-Agent',self.headers['User-Agent'])
-		request.add_header('Connection','keep-alive')
-		response = self.opener.open(request)
-		pageContent = response.read()
-		countresult = self.countrule.search(pageContent)
-		self.count = int(countresult.group(1))
-		self.allcount =int(countresult.group(2))
-		soup = BeautifulSoup(pageContent)
-		searchnextref = soup.select("#next_photo")
-		nexturltmp = self.nextrule.search(str(searchnextref))
-		photonamelement = soup.select(".info")
-		photonametmp = self.photorule.search(str(photonamelement))
-		if photonametmp is  None:
-			photonamelement = soup.select("#content")
+	def getnextandimgurl(self,path):
+		try:		
+			request = urllib2.Request(path)
+			request.add_header('User-Agent',self.headers['User-Agent'])
+			request.add_header('Connection','keep-alive')
+			response = self.opener.open(request)
+			pageContent = response.read()
+			countresult = self.countrule.search(pageContent)
+			self.count = int(countresult.group(1))
+			self.allcount =int(countresult.group(2))
+			soup = BeautifulSoup(pageContent)
+			searchnextref = soup.select("#next_photo")
+			nexturltmp = self.nextrule.search(str(searchnextref))
+			photonamelement = soup.select(".info")
 			photonametmp = self.photorule.search(str(photonamelement))
-		if photonametmp is None:
-			photonamelement = soup.select("#title-anchor")
-			photonametmp = self.movierule.search(str(photonamelement))
-		self.photoname = photonametmp.group(1)	
-		self.nexturl = nexturltmp.group(1)
-		searchdownurl = soup.find_all(class_='mainphoto')
-		downurltmp = self.imgrule.search(str(searchdownurl))
-		self.downurl = downurltmp.group(1)
-		self.opener.close()
+			if photonametmp is  None:
+				photonamelement = soup.select("#content")
+				photonametmp = self.photorule.search(str(photonamelement))
+			if photonametmp is None:
+				photonamelement = soup.select("#title-anchor")
+				photonametmp = self.movierule.search(str(photonamelement))
+			self.photoname = photonametmp.group(1)	
+			self.nexturl = nexturltmp.group(1)
+			searchdownurl = soup.find_all(class_='mainphoto')
+			downurltmp = self.imgrule.search(str(searchdownurl))
+			self.downurl = downurltmp.group(1)
+			self.opener.close()
+		except urllib2.HTTPError:
+			print "please try download again"
+			sys.exit()
 	def multiThreadstart(self):
 		self.getnextandimgurl(self.url)
 		isexist = os.path.exists(self.photoname)
@@ -77,6 +81,7 @@ class DownloadDouBan(object):
 		for i in  range(self.allcount):
 			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i,self.allcount,self.photoname))
 			t1.start()
+			time.sleep(random.uniform(0.5,1.2))
 			self.getnextandimgurl(self.nexturl)
 	def genThread(self):
 		t=threading.Thread(target=multiThreadDown)
@@ -106,8 +111,6 @@ if __name__ == '__main__':
 				downdouban.multiThreadstart()
 		else:
 			downdouban.start()
-				
-		print "we have download the image"
 		exit()
 
 
