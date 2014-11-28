@@ -8,3 +8,4 @@ you can start the program like "python downloadwallpaper.py http://www.baidu.com
 
 2,the downdoubanPhoto.py can download the douban.com site photo ,you must give the first picture index ,you can
 start the program like "python  downdoubanPhoto.py  http://www.douban.com/online/11989552/photo/2212821906/?sortby=time "
+3,if you want to download the image with multiprocess you can start the program like "python  downdoubanPhoto.py  http://www.douban.com/online/11989552/photo/2212821906/?sortby=time m "  add a "m" in the url
