@@ -14,7 +14,7 @@ import cookielib
 from bs4 import BeautifulSoup
 
 def multiThreadDown(url,count,allcount,path):
-	time.sleep(random.uniform(1,2.7))
+	time.sleep(random.uniform(1,4.5))
 	if url.__len__()> 2 :
 		urllib.urlretrieve(url,path+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
 		print '%s/%s'%(count+1,allcount)
@@ -31,6 +31,7 @@ class DownloadDouBan(object):
 		self.imgrule = re.compile('''(http://[^\{\;\,\<\"]*\.jpg)\w*?''')
 		self.countrule = re.compile('''第(\d*)张.*共(\d*)张''')
 		self.photorule = re.compile('''<h1>(.*)</h1>''')
+		self.movierule = re.compile('''>(.*)<''')
 		self.allcount = 0
 		self.count = 0
 		self.downurl = ''
@@ -54,12 +55,13 @@ class DownloadDouBan(object):
 		nexturltmp = self.nextrule.search(str(searchnextref))
 		photonamelement = soup.select(".info")
 		photonametmp = self.photorule.search(str(photonamelement))
-		if photonametmp is not None:
-			self.photoname = photonametmp.group(1)
-		else:
+		if photonametmp is  None:
 			photonamelement = soup.select("#content")
 			photonametmp = self.photorule.search(str(photonamelement))
-			self.photoname = photonametmp.group(1)	
+		if photonametmp is None:
+			photonamelement = soup.select("#title-anchor")
+			photonametmp = self.movierule.search(str(photonamelement))
+		self.photoname = photonametmp.group(1)	
 		self.nexturl = nexturltmp.group(1)
 		searchdownurl = soup.find_all(class_='mainphoto')
 		downurltmp = self.imgrule.search(str(searchdownurl))
