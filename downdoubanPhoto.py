@@ -1,6 +1,8 @@
 #-*-coding:utf-8 -*-
 
 ___author___ = "fangwei"
+import threading
+import time
 import random
 import urllib2
 import re
@@ -10,6 +12,11 @@ import time
 import sys
 import cookielib
 from bs4 import BeautifulSoup
+
+def multiThreadDown(url,count):
+	if url.__len__()> 2 :
+		urllib.urlretrieve(url,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
+		print url
 
 class DownloadDouBan(object):
 	"""
@@ -25,6 +32,7 @@ class DownloadDouBan(object):
 		self.count = 0
 		self.downurl = ''
 		self.nexturl = ''
+		self.multiThreadurl = ''
 		self.headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 	        cookie = cookielib.CookieJar()
                 self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
@@ -46,6 +54,15 @@ class DownloadDouBan(object):
 		downurltmp = self.imgrule.search(str(searchdownurl))
 		self.downurl = downurltmp.group(1)
 		self.opener.close()
+	def multiThreadstart(self):
+		self.getnextandimgurl(self.url)
+		for i in  range(self.allcount):
+			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i))
+			t1.start()
+			self.getnextandimgurl(self.nexturl)
+	def genThread(self):
+		t=threading.Thread(target=multiThreadDown)
+		t.start()	
 	def start(self):
 		self.getnextandimgurl(self.url)
 		while self.count<=self.allcount:
@@ -62,7 +79,11 @@ if __name__ == '__main__':
 	len = len(sys.argv)
 	if len >= 2:
 		downdouban = DownloadDouBan(sys.argv[1],"os.getcwd()",{'URL':'URL'})
-		downdouban.start()
+		if len==3 and sys.argv[2]=='m':
+				downdouban.multiThreadstart()
+		else:
+			downdouban.start()
+				
 		print "we have download the image"
 		exit()
 
