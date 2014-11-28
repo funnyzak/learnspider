@@ -13,9 +13,10 @@ import sys
 import cookielib
 from bs4 import BeautifulSoup
 
-def multiThreadDown(url,count,allcount):
+def multiThreadDown(url,count,allcount,path):
+	time.sleep(random.uniform(1,2.7))
 	if url.__len__()> 2 :
-		urllib.urlretrieve(url,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
+		urllib.urlretrieve(url,path+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(count)+".jpg"))
 		print '%s/%s'%(count+1,allcount)
 		print url
 
@@ -29,6 +30,7 @@ class DownloadDouBan(object):
 		self.nextrule = re.compile('''href=\"(\S*)\"''')
 		self.imgrule = re.compile('''(http://[^\{\;\,\<\"]*\.jpg)\w*?''')
 		self.countrule = re.compile('''第(\d*)张.*共(\d*)张''')
+		self.photorule = re.compile('''<h1>(.*)</h1>''')
 		self.allcount = 0
 		self.count = 0
 		self.downurl = ''
@@ -50,6 +52,14 @@ class DownloadDouBan(object):
 		soup = BeautifulSoup(pageContent)
 		searchnextref = soup.select("#next_photo")
 		nexturltmp = self.nextrule.search(str(searchnextref))
+		photonamelement = soup.select(".info")
+		photonametmp = self.photorule.search(str(photonamelement))
+		if photonametmp is not None:
+			self.photoname = photonametmp.group(1)
+		else:
+			photonamelement = soup.select("#content")
+			photonametmp = self.photorule.search(str(photonamelement))
+			self.photoname = photonametmp.group(1)	
 		self.nexturl = nexturltmp.group(1)
 		searchdownurl = soup.find_all(class_='mainphoto')
 		downurltmp = self.imgrule.search(str(searchdownurl))
@@ -57,8 +67,13 @@ class DownloadDouBan(object):
 		self.opener.close()
 	def multiThreadstart(self):
 		self.getnextandimgurl(self.url)
+		isexist = os.path.exists(self.photoname)
+		if isexist:
+			self.photoname = self.photoname + '1'
+		os.mkdir(self.photoname)
+		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
 		for i in  range(self.allcount):
-			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i,self.allcount))
+			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i,self.allcount,self.photoname))
 			t1.start()
 			self.getnextandimgurl(self.nexturl)
 	def genThread(self):
@@ -66,9 +81,14 @@ class DownloadDouBan(object):
 		t.start()	
 	def start(self):
 		self.getnextandimgurl(self.url)
+		isexist = os.path.exists(self.photoname)
+		if isexist:
+			self.photoname = self.photoname + '1'
+		os.mkdir(self.photoname)
+		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
 		while self.count<=self.allcount:
 			 print self.downurl
-			 urllib.urlretrieve(self.downurl,str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
+			 urllib.urlretrieve(self.downurl,self.photoname+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
 			 self.getnextandimgurl(self.nexturl)
 			 print "%s/%s" %(self.count,self.allcount)
 			 self.downcount = self.downcount+1
