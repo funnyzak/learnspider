@@ -13,9 +13,10 @@ import sys
 import cookielib
 from bs4 import BeautifulSoup
 
-
-
 class urlopener: 
+	"""
+	when open the url use like this with urlopener(path) as response
+	"""
 	def __init__(self,path):
         	self.path = path
  		self.headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
@@ -106,10 +107,6 @@ class DownloadDouBan(object):
 			time.sleep(random.uniform(0.5,1.2))
 			self.getnextandimgurl(self.nexturl)
 	
-	def genThread(self):
-		t=threading.Thread(target=multiThreadDown)
-		t.start()	
-	
 	def start(self):
 		self.getphotoinfo(self.url)
 		isexist = os.path.exists(self.photoname)
@@ -120,21 +117,21 @@ class DownloadDouBan(object):
 		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
 		self.getnextandimgurl(self.url)
 		while self.count<=self.allcount:
-			 print self.downurl
-			 urllib.urlretrieve(self.downurl,self.photoname+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
-			 self.getnextandimgurl(self.nexturl)
-			 print "%s/%s" %(self.count,self.allcount)
-			 self.downcount = self.downcount+1
-			 if self.downcount == int(self.allcount):
+			print self.downurl
+			urllib.urlretrieve(self.downurl,self.photoname+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
+			self.getnextandimgurl(self.nexturl)
+			print "%s/%s" %(self.count,self.allcount)
+			self.downcount = self.downcount+1
+			if self.downcount == int(self.allcount):
 				break
-			 time.sleep(random.uniform(1,2.7))
+			time.sleep(random.uniform(1,2.7))
 
 if __name__ == '__main__':
 	len = len(sys.argv)
 	if len >= 2:
 		downdouban = DownloadDouBan(sys.argv[1],"os.getcwd()",{'URL':'URL'})
 		if len==3 and sys.argv[2]=='m':
-				downdouban.multiThreadstart()
+			downdouban.multiThreadstart()
 		else:
 			downdouban.start()
 		exit()
