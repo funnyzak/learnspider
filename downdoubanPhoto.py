@@ -32,15 +32,9 @@ class DownloadDouBan(object):
 		self.countrule = re.compile('''第(\d*)张.*共(\d*)张''')
 		self.photorule = re.compile('''<h1>(.*)</h1>''')
 		self.movierule = re.compile('''>(.*)<''')
-		self.allcount = 0
-		self.count = 0
-		self.downurl = ''
-		self.nexturl = ''
-		self.multiThreadurl = ''
 		self.headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 	        cookie = cookielib.CookieJar()
                 self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
-		self.downcount = 0
 	def getnextandimgurl(self,path):
 		try:		
 			request = urllib2.Request(path)
