@@ -47,6 +47,7 @@ class DownloadDouBan(object):
 			request.add_header('User-Agent',self.headers['User-Agent'])
 			request.add_header('Connection','keep-alive')
 			response = self.opener.open(request)
+			
 			pageContent = response.read()
 			countresult = self.countrule.search(pageContent)
 			self.count = int(countresult.group(1))
@@ -56,12 +57,14 @@ class DownloadDouBan(object):
 			nexturltmp = self.nextrule.search(str(searchnextref))
 			photonamelement = soup.select(".info")
 			photonametmp = self.photorule.search(str(photonamelement))
+			
 			if photonametmp is  None:
 				photonamelement = soup.select("#content")
 				photonametmp = self.photorule.search(str(photonamelement))
 			if photonametmp is None:
 				photonamelement = soup.select("#title-anchor")
 				photonametmp = self.movierule.search(str(photonamelement))
+			
 			self.photoname = photonametmp.group(1)	
 			self.nexturl = nexturltmp.group(1)
 			searchdownurl = soup.find_all(class_='mainphoto')
@@ -74,10 +77,12 @@ class DownloadDouBan(object):
 	def multiThreadstart(self):
 		self.getnextandimgurl(self.url)
 		isexist = os.path.exists(self.photoname)
+		
 		if isexist:
 			self.photoname = self.photoname + '1'
 		os.mkdir(self.photoname)
 		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
+		
 		for i in  range(self.allcount):
 			t1 = threading.Thread(target=multiThreadDown,args=(self.downurl,i,self.allcount,self.photoname))
 			t1.start()
@@ -89,10 +94,12 @@ class DownloadDouBan(object):
 	def start(self):
 		self.getnextandimgurl(self.url)
 		isexist = os.path.exists(self.photoname)
+		
 		if isexist:
 			self.photoname = self.photoname + '1'
 		os.mkdir(self.photoname)
 		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
+	
 		while self.count<=self.allcount:
 			 print self.downurl
 			 urllib.urlretrieve(self.downurl,self.photoname+'/'+str(time.strftime("%Y-%b-%d-%a-%H-%M-%S",time.localtime())+"-"+str(self.count)+".jpg"))
