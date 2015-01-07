@@ -61,6 +61,13 @@ class DownloadDouBan(object):
 			print '%s/%s'%(count+1,allcount)
 			print url
 
+	def removedir(self,path):
+		if os.path.exists(path):
+			filelist = os.listdir(path)
+			for fpath in filelist:
+				os.remove(os.path.abspath('.')+'/'+path+'/'+fpath)
+			os.rmdir(os.path.abspath('.')+'/'+path)
+		
 	def getnextandimgurl(self,path):
 		with urlopener(path) as response:	
 			pageContent = response.read()
@@ -95,9 +102,8 @@ class DownloadDouBan(object):
 	def multiThreadstart(self):
 		self.getphotoinfo(self.url)
 		isexist = os.path.exists(self.photoname)
-		
 		if isexist:
-			self.photoname = self.photoname + '1'
+			self.removedir(self.photoname)
 		os.mkdir(self.photoname)
 		self.photoname = os.path.abspath('.')+'/'+ self.photoname 		
 		self.getnextandimgurl(self.url)
@@ -112,7 +118,7 @@ class DownloadDouBan(object):
 		isexist = os.path.exists(self.photoname)
 		
 		if isexist:
-			self.photoname = self.photoname + '1'
+			self.removedir(self.photoname)
 		os.mkdir(self.photoname)
 		self.photoname = os.path.abspath('.')+'/'+ self.photoname 	
 		self.getnextandimgurl(self.url)
