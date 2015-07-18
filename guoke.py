@@ -199,5 +199,5 @@ class guokefetch:
 		fetchThread.join()
 
 if __name__ == '__main__':
-	gk_down = guokefetch("http://www.guokr.com/group/48/","")
+	gk_down = guokefetch(sys.argv[1],"")
 	gk_down.start()
