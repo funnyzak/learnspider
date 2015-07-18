@@ -1,4 +1,5 @@
 Learnspider
+
 ===========
 
 +  下载豆瓣相册的小爬虫，用到了beautifulsoup ，使用的时候需要安装python版本的beautiful,使用方法是“python downdoubanPhoto.py 相册首页地址” 例如 “python  downdoubanPhoto.py  http://www.douban.com/online/11989552/photo/2212821906/?sortby=time”
