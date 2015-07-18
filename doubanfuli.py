@@ -194,7 +194,7 @@ class guokefetch:
 		fetchThread.join()
 
 if __name__ == '__main__':
-	len = len(sys.argv)
-	if len >= 2:
+	length = len(sys.argv)
+	if length >= 2:
 		gk_down = guokefetch(sys.argv[1],"")
 		gk_down.start()
