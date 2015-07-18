@@ -194,5 +194,7 @@ class guokefetch:
 		fetchThread.join()
 
 if __name__ == '__main__':
-	gk_down = guokefetch("http://www.douban.com/group/haixiuzu/discussion?start=0","")
-	gk_down.start()
+	len = len(sys.argv)
+	if len >= 2:
+		gk_down = guokefetch(sys.argv[1],"")
+		gk_down.start()
