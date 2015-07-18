@@ -7,7 +7,9 @@
 
  + doubanfuli.py  是下载豆瓣不要害羞小组图片的爬虫<br>
  	doubanfuli.py   http://www.douban.com/group/haixiuzu/discussion?start=0
- + downdoubanPhoto.py 下载豆瓣相册的爬虫<br>
+ 
++ downdoubanPhoto.py 下载豆瓣相册的爬虫<br>
  	python downdoubanPhoto.py  http://www.douban.com/online/11989552/photo/2212821906/?sortby=time m
- + guoke.py   下载果壳网小组的帖子图片<br>
-        guoke.py  http://www.guokr.com/group/48/
+
++ guoke.py   下载果壳网小组的帖子图片<br>
+  guoke.py  http://www.guokr.com/group/48/
